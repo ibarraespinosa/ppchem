@@ -30,11 +30,22 @@ emis_grid_array <- function(spobj, month, sf = FALSE, sr = 4326, type = "lines",
   if(sf){
     return(netg)
   } else {
-    a <- array(0, dim = c(1,1, 1800, 3600))
-    if(verbose) cat("Dimensions of array: ", dim(m), '\n')
-    m <- t(matrix(netg$emission, ncol = 1800, nrow = 3600, byrow = TRUE))
-    if(verbose) cat("Dimensions of emissions: ", dim(m), '\n')
-    a[month, 1, , ] <- m
+    if(!missing(month)){
+      a <- array(0, dim = c(month,1, 1800, 3600))
+      if(verbose) cat("Dimensions of array: ", dim(a), '\n')
+      m <- t(matrix(netg$emission, ncol = 1800, nrow = 3600, byrow = TRUE))
+      if(verbose) cat("Dimensions of emissions: ", dim(m), '\n')
+      a[month, 1, , ] <- m
+
+    } else {
+      if(verbose) cat("Assuming the same montlhy emissions for the year\n")
+      a <- array(0, dim = c(12, 1, 1800, 3600))
+      if(verbose) cat("Dimensions of array: ", dim(a), '\n')
+      m <- t(matrix(netg$emission, ncol = 1800, nrow = 3600, byrow = TRUE))
+      if(verbose) cat("Dimensions of emissions: ", dim(m), '\n')
+      a[, 1, , ] <- m
+
+    }
     return(a)
   }
 }
