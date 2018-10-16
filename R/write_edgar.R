@@ -24,40 +24,34 @@ write_edgar <- function(path,
                        m,
                        month,
                        verbose = TRUE){
-  file <- h5::h5file(name = path,
-                     mode = 'r+')
+  file <- h5::h5file(name = path, mode = 'r+')
   ds <- h5::list.datasets(file, recursive = TRUE)
   ds <- substr(x = ds, start = 2, nchar(ds))
-
-  if(verbose) print(file)
-  if(verbose) cat("Datasets:\n",
-                  ds, "\n")
-  if(verbose) cat("Attributes:\n",
-                  h5::list.attributes(file), "\n")
 
   if(missing(dataset)){
     choice <- utils::menu(ds, title="Choose dataset")
     dataset <- ds[choice]
   }
   name_ds <- h5::openDataSet(.Object = file, datasetname = dataset)
-  dset <- h5::readDataSet(.Object = name_ds)
-  if(verbose) cat("dimensions: ", dim(dset), '\n')
+  dset <- file[dataset]
+  if(verbose) cat("dimensions dataset: ", dim(dset), '\n')
+  if(verbose) cat("class datset: ", class(dset), '\n')
   if(!missing(month)){
     if(verbose) cat("Month: ", month, '\n')
     m[is.na(m)] <- 0
     dset[is.na(dset)] <- 0
-    dset[month, 1, 1800:1, ] <- m + dset[month, 1, 1800:1, ]
+    dset[month, 1, , ] <- m + dset[month, 1, , ]
   } else {
     if(verbose) cat("Assuming m is an array with 12 months\n with dimensions\n")
-    m[is.na(m)] <- 0
-    dset[is.na(dset)] <- 0
-    dset[, 1, 1800:1, ] <- m + dset[, 1, 1800:1, ]
+    class(m) <- class(dset)
+    # dset[, , , ] <- m
 
   }
-  #write
-  if(verbose) cat("Writing... \n")
-  h5::writeDataSet(.Object = ds, data = dset)
 
-  h5close(file)
+  #write
+  if(verbose) cat("Writing...", dataset,"\n")
+  h5::writeDataSet(.Object = name_ds, data = m)
+
+  h5::h5close(file)
 
 }
