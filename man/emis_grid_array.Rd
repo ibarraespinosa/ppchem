@@ -4,8 +4,8 @@
 \alias{emis_grid_array}
 \title{Similar to vein::emis_grid but it returns an array with dimensions of ppchem::read_edgar}
 \usage{
-emis_grid_array(spobj, month, sf = FALSE, sr = 4326, type = "lines",
-  verbose = TRUE)
+emis_grid_array(spobj, month, return = "array", sr = 4326,
+  type = "lines", verbose = TRUE)
 }
 \arguments{
 \item{spobj}{A spatial dataframe of class "sp" or "sf". When class is "sp"
@@ -13,7 +13,7 @@ it is transformed to "sf". It can be points or lines.}
 
 \item{month}{Integer, which month? from 1 to 12.}
 
-\item{sf}{Logical Do you want an 'sf' instead an array?}
+\item{return}{Character What do you want? 'sf', 'matrix' or 'array'?}
 
 \item{sr}{Integer, Spatial reference e.g: 31983. It is required if spobj and g are
 not projected. Please, see http://spatialreference.org/.}

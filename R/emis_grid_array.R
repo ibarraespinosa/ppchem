@@ -5,7 +5,7 @@
 #' @param spobj A spatial dataframe of class "sp" or "sf". When class is "sp"
 #' it is transformed to "sf". It can be points or lines.
 #' @param month Integer, which month? from 1 to 12.
-#' @param sf Logical Do you want an 'sf' instead an array?
+#' @param return Character What do you want? 'sf', 'matrix' or 'array'?
 #' @param sr Integer, Spatial reference e.g: 31983. It is required if spobj and g are
 #' not projected. Please, see http://spatialreference.org/.
 #' @param type type of geometry: "lines" or "points".
@@ -20,14 +20,14 @@
 #' net$emission <- 1:length(net)
 #' ene <- emis_grid_array(spobj = net[,"emission"])
 #' }
-emis_grid_array <- function(spobj, month, sf = FALSE, sr = 4326, type = "lines",
+emis_grid_array <- function(spobj, month, return = 'array', sr = 4326, type = "lines",
                             verbose = TRUE){
   g <- sysdata$g
   cat(names(spobj))
   g$id <- 1:nrow(g)
 
   netg <- vein::emis_grid(spobj = spobj, g = g, sr = sr, type = type)
-  if(sf){
+  if(return == "sf"){
     return(netg)
   } else {
     if(!missing(month)){
@@ -43,10 +43,13 @@ emis_grid_array <- function(spobj, month, sf = FALSE, sr = 4326, type = "lines",
       if(verbose) cat("Dimensions of array: ", dim(a), '\n')
       m <- t(matrix(netg$emission, ncol = 1800, nrow = 3600, byrow = TRUE))
       if(verbose) cat("Dimensions of emissions: ", dim(m), '\n')
-      a[, 1, , ] <- m
+      m[is.na(m)] <- 0
+      a[is.na(a)] <- 0
+      a[, 1, , ] <- m + a[, 1, , ]
 
     }
-    return(a)
+    if(return == "matrix") return(m)
+    if(return == "array") return(a)
   }
 }
 

@@ -16,7 +16,7 @@
 #' # do not run
 #' path  = "~/Downloads/EDGAR-HTAP_TRANSPORT_2010.h5"
 #' e <- read_edgar(path, month = 1, dataset = "PM2.5")
-#' e <- e*2
+#' e <- e* #units in kg/m2/s
 #' write_edgar(path = path, dataset = "PM2.5", month = 1)
 #' }
 write_edgar <- function(path,
@@ -44,10 +44,15 @@ write_edgar <- function(path,
   if(verbose) cat("dimensions: ", dim(dset), '\n')
   if(!missing(month)){
     if(verbose) cat("Month: ", month, '\n')
-    dset[month, 1, 1800:1 , ] <- m
+    m[is.na(m)] <- 0
+    dset[is.na(dset)] <- 0
+    dset[month, 1, 1800:1, ] <- m + dset[month, 1, 1800:1, ]
   } else {
     if(verbose) cat("Assuming m is an array with 12 months\n with dimensions\n")
-    dset[, 1, 1800:1 , ] <- m
+    m[is.na(m)] <- 0
+    dset[is.na(dset)] <- 0
+    dset[, 1, 1800:1, ] <- m + dset[, 1, 1800:1, ]
+
   }
   #write
   if(verbose) cat("Writing... \n")

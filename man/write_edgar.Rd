@@ -27,7 +27,7 @@ input traffic data is usually for morning rush hours.
 # do not run
 path  = "~/Downloads/EDGAR-HTAP_TRANSPORT_2010.h5"
 e <- read_edgar(path, month = 1, dataset = "PM2.5")
-e <- e*2
+e <- e* #units in kg/m2/s
 write_edgar(path = path, dataset = "PM2.5", month = 1)
 }
 }
