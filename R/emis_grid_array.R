@@ -45,7 +45,8 @@ emis_grid_array <- function(spobj, month, return = 'array', sr = 4326, type = "l
       if(verbose) cat("Dimensions of emissions: ", dim(m), '\n')
       m[is.na(m)] <- 0
       a[is.na(a)] <- 0
-      a[, 1, , ] <- m + a[, 1, , ]
+      a[1, 1, , ] <- m + a[1, 1, , ]
+      a[, 1, , ] <- a[1, 1, , ]
 
     }
     if(return == "matrix") return(m)
