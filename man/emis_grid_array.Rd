@@ -4,7 +4,8 @@
 \alias{emis_grid_array}
 \title{Similar to vein::emis_grid but it returns an array with dimensions of ppchem::read_edgar}
 \usage{
-emis_grid_array(spobj, month, sf = FALSE, sr = 4326, type = "lines")
+emis_grid_array(spobj, month, sf = FALSE, sr = 4326, type = "lines",
+  verbose = TRUE)
 }
 \arguments{
 \item{spobj}{A spatial dataframe of class "sp" or "sf". When class is "sp"
@@ -32,6 +33,6 @@ When spobj is a 'Spatial' object (class of sp), they are converted
 library(vein)
 data(net)
 net$emission <- 1:length(net)
-netg <- emis_grid_array(spobj = net[,"emission"])
+ene <- emis_grid_array(spobj = net[,"emission"])
 }
 }

@@ -4,19 +4,19 @@
 \alias{read_edgar}
 \title{Read HDF5 EDGAR emission files.}
 \usage{
-read_edgar(path, dataset, show.attribute = FALSE, month,
+read_edgar(path, month, dataset, show.attribute = FALSE,
   verbose = TRUE)
 }
 \arguments{
 \item{path}{Character; Where is your HDF5 file.}
+
+\item{month}{Integer; which month from 1 to 12.}
 
 \item{dataset}{Character; What data do you want. If you dont know,
 i will show you that it is inside so that you can choose.}
 
 \item{show.attribute}{Logical; Do you wna to see attirbutes?. If you dont know which,
 i will show you that it is inside so that you can choose.}
-
-\item{month}{Integer; which month from 1 to 12.}
 
 \item{verbose}{Logical; Do you want more information?}
 }
@@ -31,6 +31,6 @@ input traffic data is usually for morning rush hours.
 \dontrun{
 # do not run
 path  = "~/Downloads/EDGAR-HTAP_TRANSPORT_2010.h5"
-e <- read_edgar(path)
+e <- read_edgar(path, dataset = "PM2.5")
 }
 }

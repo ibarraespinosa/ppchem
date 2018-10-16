@@ -18,9 +18,10 @@
 #' library(vein)
 #' data(net)
 #' net$emission <- 1:length(net)
-#' netg <- emis_grid_array(spobj = net[,"emission"])
+#' ene <- emis_grid_array(spobj = net[,"emission"])
 #' }
-emis_grid_array <- function(spobj, month, sf = FALSE, sr = 4326, type = "lines"){
+emis_grid_array <- function(spobj, month, sf = FALSE, sr = 4326, type = "lines",
+                            verbose = TRUE){
   g <- sysdata$g
   cat(names(spobj))
   g$id <- 1:nrow(g)
@@ -29,8 +30,10 @@ emis_grid_array <- function(spobj, month, sf = FALSE, sr = 4326, type = "lines")
   if(sf){
     return(netg)
   } else {
-    a <- array(0, dim = c(1,1, 3600, 1800))
-    m <- matrix(netg$emission, ncol = 1800, nrow = 3600)
+    a <- array(0, dim = c(1,1, 1800, 3600))
+    if(verbose) cat("Dimensions of array: ", dim(m), '\n')
+    m <- t(matrix(netg$emission, ncol = 1800, nrow = 3600, byrow = TRUE))
+    if(verbose) cat("Dimensions of emissions: ", dim(m), '\n')
     a[month, 1, , ] <- m
     return(a)
   }

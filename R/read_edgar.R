@@ -17,44 +17,48 @@
 #' @examples \dontrun{
 #' # do not run
 #' path  = "~/Downloads/EDGAR-HTAP_TRANSPORT_2010.h5"
-#' e <- read_edgar(path)
+#' e <- read_edgar(path, dataset = "PM2.5")
 #' }
 read_edgar <- function(path,
+                       month,
                        dataset,
                        show.attribute = FALSE,
-                       month,
                        verbose = TRUE){
   file <- h5::h5file(name = path, mode = 'r')
   if(missing(month)){
     choice <- utils::menu(1:12, title="Choose month")
     month <- (1:12)[choice]
   }
-  ds <- list.datasets(file, recursive = TRUE)
+  ds <- h5::list.datasets(file, recursive = TRUE)
   ds <- substr(x = ds, start = 2, nchar(ds))
 
-  if(verbose) cat(file, "\n")
+  if(verbose) print(file)
   if(verbose) cat("Datasets:\n",
                   ds, "\n")
   if(verbose) cat("Attributes:\n",
-                  list.attributes(file), "\n")
+                  h5::list.attributes(file), "\n")
 
   if(missing(dataset)){
     choice <- utils::menu(ds, title="Choose dataset")
-    nds <- ds[choice]
+    dataset <- ds[choice]
   }
   if(verbose) cat( "Reading... \n")
-  a <- file[nds][month, 1800:1, , ]
-  if(verbose) cat("dimensions: ", dim(a), '\n')
+  name_ds <- h5::openDataSet(.Object = file, datasetname = dataset)
+  dset <- h5::readDataSet(.Object = name_ds)
+  if(verbose) cat("Original dimensions: ", dim(dset), '\n')
+  dset <- dset[month, 1, 1800:1, ]
+  dset <- t(dset)
+  if(verbose) cat("Final dimensions: ", dim(dset), '\n')
 
   if(show.attribute){
-    latr <- list.attributes(file)
+    latr <- h5::list.attributes(file)
     choice <- utils::menu(latr, title="Choose attribute")
     nds <- latr[choice]
     at <- h5::openAttribute(.Object = file, attributename = nds)
     bt <- h5::readAttribute(at)
     if(verbose) cat("Attribute Name: ", at@name,  "\nValue: ",bt, "\n")
   }
-  return(a)
+  return(dset)
   h5::h5close(file)
 
 }

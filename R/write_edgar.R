@@ -37,9 +37,9 @@ write_edgar <- function(path,
 
   if(missing(dataset)){
     choice <- utils::menu(ds, title="Choose dataset")
-    nds <- ds[choice]
+    dataset <- ds[choice]
   }
-  name_ds <- h5::openDataSet(.Object = file, datasetname = nds)
+  name_ds <- h5::openDataSet(.Object = file, datasetname = dataset)
   dset <- h5::readDataSet(.Object = name_ds)
   if(verbose) cat("dimensions: ", dim(dset), '\n')
   if(!missing(month)){
