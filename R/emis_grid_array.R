@@ -23,7 +23,7 @@
 emis_grid_array <- function(spobj, month, return = 'array', sr = 4326, type = "lines",
                             verbose = TRUE){
   g <- sysdata$g
-  cat(names(spobj))
+  if(verbose) cat(names("names:", spobj), '\n')
   g$id <- 1:nrow(g)
 
   netg <- vein::emis_grid(spobj = spobj, g = g, sr = sr, type = type)

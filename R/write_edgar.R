@@ -25,7 +25,7 @@ write_edgar <- function(path,
                        month,
                        verbose = TRUE){
   file <- h5::h5file(name = path,
-                     mode = 'w')
+                     mode = 'r+')
   ds <- h5::list.datasets(file, recursive = TRUE)
   ds <- substr(x = ds, start = 2, nchar(ds))
 
